@@ -26,3 +26,58 @@ Cypress.Commands.add('token', (email, senha) => {
           failOnStatusCode: false
     })
  })
+ 
+Cypress.Commands.add('listarUsuarios', () => {
+  return cy.request({
+    method: 'GET',
+    url: 'usuarios'
+  }).then((response) => {
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.property('usuarios');
+  });
+});
+
+Cypress.Commands.add('cadastrarUsuario', (token, nome, email, password) =>{
+    cy.request({
+        method: 'POST', 
+        url: 'usuarios',
+        headers: {authorization: token}, 
+        body: {
+            "nome": nome,
+            "email": email,
+            "password": password,
+            "administrador": "true"
+          }, 
+          failOnStatusCode: false
+    })
+ })
+
+Cypress.Commands.add('editarUsuario', (token,idUsuario, nome, email, password) => {
+  cy.request({
+    method: 'PUT',
+    url: `usuarios/${idUsuario}`,
+    headers: { Authorization: token },
+    body: 
+    {
+        "nome": nome,
+        "email": email,
+        "password": password,
+        "administrador": "true"
+    }, 
+    failOnStatusCode: false
+  })
+
+  
+})
+
+Cypress.Commands.add('deletarUsuario', (token,idUsuario) => {
+  cy.request({
+    method: 'DELETE',
+    url: `usuarios/${idUsuario}`,
+    headers: { Authorization: token },
+    failOnStatusCode: false
+  })
+})
+
+
+
